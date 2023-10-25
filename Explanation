@@ -1,0 +1,21 @@
+Line-by-line explanation of the Dockerfile :
+
+FROM ubuntu:22.04
+This line specifies the base image that your image will be built on. In this case, you are using the official Ubuntu 22.04 image.
+
+RUN apt-get update
+RUN apt-get install -y nginx zip curl
+These lines update the package list and install the Nginx web server, Zip archiver, and Curl command-line tool.
+
+RUN echo "daemon off;" >>/etc/nginx/nginx.conf
+This line adds a line to the Nginx configuration file to disable the daemon mode. This will prevent Nginx from starting automatically when the container is started.
+
+RUN curl -o /var/www/html/master.zip -L https://codeload.github.com/gabrielecirulli/2048/zip/master
+RUN cd /var/www/html/ && unzip master.zip && mv 2048-master/* . && rm -rf 2048-master master.zip
+These lines download the 2048 game from GitHub, unzip it, and move the game files to the root of the web server's document root directory.
+
+EXPOSE 80
+This line exposes port 80 from the container. This means that when a container is created from this image, it will be able to receive traffic on port 80.
+
+CMD ["/usr/sbin/nginx", "-c" , "/etc/nginx/nginx.conf"]
+This line specifies the command that will be run when the container is started. In this case, it will start the Nginx web server.
